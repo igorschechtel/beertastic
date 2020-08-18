@@ -1,38 +1,41 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <v-app>
+    <Navbar />
+    <router-view></router-view>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import axios from 'axios';
+import Navbar from './components/Navbar';
 
 export default {
-  name: "App",
-  components: {
-    HelloWorld,
+  name: 'App',
+
+  components: { Navbar },
+
+  data: () => ({}),
+
+  beforeCreate() {
+    axios.get('https://api.punkapi.com/v2/beers').then((res) => {
+      this.$store.state.loadedBeers = res.data.map((beer) => ({ ...beer, isFavorite: false }));
+    });
   },
 };
 </script>
 
 <style>
-@font-face {
-  font-family: "Dosis";
-  src: local("Dosis"),
-    url(./assets/fonts/Dosis-VariableFont_wght.ttf) format("truetype");
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600&display=swap');
+
+a {
+  color: inherit;
 }
 
 #app {
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
 }
 
 .dosis {
-  font-family: "Dosis", Helvetica, sans-serif;
+  font-family: 'Dosis', sans-serif !important;
 }
 </style>

@@ -2,25 +2,23 @@
   <v-container>
     <v-row>
       <v-col>
-        <h1 class="dosis text-center" id="heading">
-          Favorite Beers
-        </h1>
+        <h1 class="dosis text-center" id="heading">Favorite Beers</h1>
       </v-col>
     </v-row>
-    <BeersShowcase :beers="favoriteBeers" :canLoadMore="false" />
+    <BeersShowcase :beers="favoriteBeers" :loadMoreOnPageEnd="false" />
   </v-container>
 </template>
 
 <script>
-import BeersShowcase from '../components/BeersShowcase';
-import { mapGetters } from 'vuex';
+import BeersShowcase from "../components/BeersShowcase";
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Favorites',
+  name: "Favorites",
 
   components: { BeersShowcase },
 
-  computed: mapGetters(['favoriteBeers']),
+  computed: mapGetters(["favoriteBeers"]),
 };
 </script>
 
@@ -32,7 +30,7 @@ export default {
   margin: 15px 0 25px 0;
 }
 #heading::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   right: 0;

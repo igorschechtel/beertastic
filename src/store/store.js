@@ -18,6 +18,9 @@ export const store = new Vuex.Store({
     currentPage: (state) => Math.ceil(state.loadedBeers.length / 25),
     searchField: (state) => state.searchField,
     searchResults: (state) => state.searchResults,
+    isFavorite: (state) => (beerId) => {
+      return state.favoriteBeers.findIndex((beer) => beer.id === beerId) !== -1;
+    },
   },
 
   mutations: {
@@ -25,17 +28,12 @@ export const store = new Vuex.Store({
       state.loadedBeers.push(...newBeers);
     },
 
-    toggleFavorite: (state, id) => {
-      let beer = state.loadedBeers.find((beer) => beer.id === id);
-      if (beer === undefined) {
-        beer = state.searchResults.find((beer) => beer.id === id);
-      }
-      const wasFavorite = beer.isFavorite;
-      beer.isFavorite = !wasFavorite;
-      if (!wasFavorite) {
-        state.favoriteBeers.push({ ...beer });
+    toggleFavorite: (state, clickedBeer) => {
+      const isFavorite = state.favoriteBeers.findIndex((beer) => beer.id === clickedBeer.id) !== -1;
+      if (isFavorite) {
+        state.favoriteBeers = state.favoriteBeers.filter((beer) => beer.id !== clickedBeer.id);
       } else {
-        state.favoriteBeers = state.favoriteBeers.filter((beer) => beer.id !== id);
+        state.favoriteBeers.push(clickedBeer);
       }
     },
 
@@ -52,7 +50,7 @@ export const store = new Vuex.Store({
     loadMoreBeers: (context) => {
       const page = context.getters.currentPage + 1;
       axios.get('https://api.punkapi.com/v2/beers?page=' + page).then((res) => {
-        const newBeers = res.data.map((beer) => ({ ...beer, isFavorite: false }));
+        const newBeers = res.data;
         context.commit('addLoadedBeers', newBeers);
       });
     },
@@ -66,10 +64,11 @@ export const store = new Vuex.Store({
     },
 
     doSearch: ({ commit }, query) => {
+      commit('updateSearchResults', []);
       axios
         .get('https://api.punkapi.com/v2/beers?beer_name=' + query.replace(' ', '_'))
         .then((res) => {
-          const beersFound = res.data.map((beer) => ({ ...beer, isFavorite: false }));
+          const beersFound = res.data;
           commit('updateSearchResults', beersFound);
         });
     },

@@ -8,37 +8,37 @@
 
     <v-row>
       <v-col>
-        <BeersShowcase :beers="searchResults" :canLoadMore="false" :isSearch="true" />
+        <BeersShowcase :beers="searchResults" :loadMoreOnPageEnd="false" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import BeersShowcase from '../components/BeersShowcase';
-import Searchbar from '../components/Searchbar';
-import { mapGetters } from 'vuex';
+import BeersShowcase from "../components/BeersShowcase";
+import Searchbar from "../components/Searchbar";
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'SearchResults',
+  name: "SearchResults",
 
   components: { BeersShowcase, Searchbar },
 
   data: () => ({
-    query: '',
+    query: "",
   }),
 
   mounted() {
     this.query = this.$route.params.query;
-    this.$store.dispatch('doSearch', this.query);
+    this.$store.dispatch("doSearch", this.query);
   },
 
-  computed: mapGetters(['searchResults']),
+  computed: mapGetters(["searchResults"]),
 
   watch: {
     $route(to) {
       this.query = to.params.query;
-      this.$store.dispatch('doSearch', this.query);
+      this.$store.dispatch("doSearch", this.query);
     },
   },
 };

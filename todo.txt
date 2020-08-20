@@ -1,0 +1,4 @@
+- ajustar cor das estrelas home/busca
+- limpar pesquisa na volta ao home
+- carregar automaticamente mais 25 cervejas
+
